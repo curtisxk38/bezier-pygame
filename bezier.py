@@ -1,5 +1,6 @@
 import pygame
 import control
+import text
 import colors
 
 
@@ -28,6 +29,8 @@ class MainState(control.State):
         self.curve_vertex_list = []
         self.speed = 5
         self.step = 30
+        self.step_text = text.Text(str(self.step), 30, colors.BLACK, (30, 30))
+        self.timer = 0
 
     def get_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -41,21 +44,35 @@ class MainState(control.State):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             self.curve_vertex_list.clear()
             self.make_curve_points()
-                
+
     def update(self, screen):
         for key in self.key_bindings_dict:
                     if self.pressed_keys[self.key_bindings_dict[key]] and len(self.control_vertex_list) > 0:
                         self.control_vertex_list[self.vertex_control] += self.direction_dict[key] * self.speed            
-                   
+        self.update_step()
+        self.step_text.update(str(self.step))
         # Draw
         screen.fill(colors.WHITE)
-
+        self.step_text.draw(screen)
         for i, vertex in enumerate(self.control_vertex_list):
             color = colors.RED if i == self.vertex_control else colors.BLUE
             pygame.draw.circle(screen, color, (int(vertex.x), int(vertex.y)), 7)
 
         for point in self.curve_vertex_list:
             pygame.draw.circle(screen, colors.GREEN, (int(point.x), int(point.y)), 5)
+
+    def update_step(self):
+        if self.pressed_keys[pygame.K_q]:
+            self.timer += 1
+            if self.timer > 10:
+                self.step += 1
+                self.timer = 0
+
+        elif self.pressed_keys[pygame.K_e]:
+            self.timer += 1
+            if self.timer > 10:
+                self.step -= 1
+                self.timer = 0
 
     def change_control(self):
         self.vertex_control += 1
