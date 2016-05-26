@@ -2,7 +2,7 @@ import pygame
 import os
 import sys
 import control
-import state
+import bezier
 
 
 def main():
@@ -18,7 +18,7 @@ def main():
 
     state_dict = {
     			   # Insert your states here
-    			    "main_state" : state.MainState()
+    			    "main_state" : bezier.MainState()
                   }
     
     game_control = control.Control(1000.0 / DESIRED_FPS)
