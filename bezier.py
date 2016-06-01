@@ -29,6 +29,7 @@ class MainState(control.State):
         self.curve_vertex_list = []
         self.speed = 5
         self.step = 30
+        self.width = 3
         self.step_text = text.Text(str(self.step), 30, colors.BLACK, (30, 30))
         self.timer = 0
 
@@ -58,8 +59,10 @@ class MainState(control.State):
             color = colors.RED if i == self.vertex_control else colors.BLUE
             pygame.draw.circle(screen, color, (int(vertex.x), int(vertex.y)), 7)
 
-        for point in self.curve_vertex_list:
-            pygame.draw.circle(screen, colors.GREEN, (int(point.x), int(point.y)), 5)
+        if len(self.curve_vertex_list) > 1:
+            pygame.draw.lines(screen, colors.GREEN, False, self.curve_vertex_list, self.width)
+            # Draw last line from last curve point to last control point
+            pygame.draw.line(screen, colors.GREEN, self.curve_vertex_list[-1], self.control_vertex_list[-1], self.width)
 
     def update_step(self):
         if self.pressed_keys[pygame.K_q]:
